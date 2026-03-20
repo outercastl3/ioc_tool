@@ -20,12 +20,12 @@ def argument_parse():
     pars.add_argument(
         "-i", "--indicator",
         required=True,
-        help="Input your indicator: domain, ip-address or file-path to hash"
+        help="Input your indicator: domain, ip-address or hash"
         )
     
     return pars.parse_args()
 
-def hash_api(file_path):
+def hash_api(hash):
     pass
 
 def domain_api(domain):
@@ -42,6 +42,4 @@ if __name__ == "__main__":
         domain_api(args.indicator)
     elif args.type == "ip":
         ip_api(args.indicator)
-    else:
-        print("Wrong indicator type")
 
