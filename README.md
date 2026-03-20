@@ -3,7 +3,7 @@ A self-written command-line Indicator of Compromise tool, which lookups across m
 
 ## Supported IOC Types
 - **IP Addresses** - AbuseIPDB, Shodan
-- **DOmains** - VirusTotal
+- **Domains** - VirusTotal
 - **File Hashes** - VirusTotal
 
 ## API Used
