@@ -27,8 +27,11 @@ def argument_parse():
     return pars.parse_args()
 
 def hash_api(hash):
-    pass
-
+    api_url_virus = f"https://www.virustotal.com/api/v3/files/{hash}"
+    api_key_virus = os.environ.get("VIRUSTOTAL_KEY")
+    
+    try:
+        respones = requests.get(api_url_virus, headers={
 def domain_api(domain):
     pass
 
