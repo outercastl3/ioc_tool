@@ -2,6 +2,7 @@ import argparse
 import requests
 import json
 import os
+import sys
 
 def argument_parse():
     pars = argparse.ArgumentParser(
@@ -26,12 +27,30 @@ def argument_parse():
     
     return pars.parse_args()
 
-def hash_api(hash):
-    api_url_virus = f"https://www.virustotal.com/api/v3/files/{hash}"
+def hash_api(filehash):
+    api_url_virus = f"https://www.virustotal.com/api/v3/files/{filehash}"
     api_key_virus = os.environ.get("VIRUSTOTAL_KEY")
     
     try:
-        respones = requests.get(api_url_virus, headers={
+        response = requests.get(api_url_virus, headers={"x-apikey": api_key_virus, "accept": "application/json"})
+        if response.status_code == 200:
+            response_data = response.json()["data"]["attributes"]
+            print(f"File Name: {response_data['meaningful_name']}")
+            print(f"Analysis Stats from {response_data['last_analysis_date']}: {response_data['last_analysis_stats']}")
+            print(f"File Type: {response_data['type_description']}")
+
+        elif response.status_code == 400:
+            print("BadRequestError")
+
+        else:
+             print(f"Error: {response.status_code}")
+
+    except requests.exceptions.ConnectionError:
+        print("Error, connection could not be established")
+
+    except requests.exceptions.Timeout:
+        print("Error: request timed out")
+
 def domain_api(domain):
     pass
 
@@ -40,8 +59,8 @@ def ip_api(ip_addr):
     api_key = os.environ.get("ABUSEIPDB_KEY")
     try:
         response = requests.get(api_url, headers={"Key": api_key, "Accept": "application/json"}, params={"ipAddress": ip_addr, "maxAgeInDays":90})
-
-         if response.status_code == 200:
+        
+        if response.status_code == 200:
             response_data = response.json()["data"]
             print(f"IP: {response_data['ipAddress']}")
             print(f"Abuse Score: {response_data['abuseConfidenceScore']}")
