@@ -35,7 +35,7 @@ def hash_api(filehash):
         response = requests.get(api_url_virus, headers={"x-apikey": api_key_virus, "accept": "application/json"})
         if response.status_code == 200:
             response_data = response.json()["data"]["attributes"]
-            print(f"File Name: {response_data['meaningful_name']}")
+            print(f"File Name: {response_data['meaningful_name']}") # add more data in the future
             print(f"Analysis Stats from {response_data['last_analysis_date']}: {response_data['last_analysis_stats']}")
             print(f"File Type: {response_data['type_description']}")
 
@@ -52,7 +52,23 @@ def hash_api(filehash):
         print("Error: request timed out")
 
 def domain_api(domain):
-    pass
+    api_url_virus_domain = https://www.virustotal.com/api/v3/domains/{domain}
+    api_key_virus = os.environ.get("VIRUSTOTAL_KEY")
+    try:
+        response = requests.get(api_url_virus, headers={"x-apikey": api_key_virus, "accept": "application/json"})
+        if response.status_code == 200:
+            response_data = response.json()["data"]["attributes"]
+#need to add printing here
+
+        elif response.status_code == 400:
+            print("BadRequestError")
+        else:
+            print(f"Error: {response.status_code}")
+    except requests.exceptions.ConnectionError:
+        print("Error, connection could not be established")
+    except requests.exceptions.Timeout:
+        print("Error: request timed out")
+
 
 def ip_api(ip_addr):
     api_url = "https://api.abuseipdb.com/api/v2/check"
