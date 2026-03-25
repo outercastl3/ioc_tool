@@ -58,14 +58,20 @@ def domain_api(domain):
         response = requests.get(api_url_virus, headers={"x-apikey": api_key_virus, "accept": "application/json"})
         if response.status_code == 200:
             response_data = response.json()["data"]["attributes"]
+            print(f"Domain Name: {domain}")
+            print(f"Results of last Analysis: {response_data['last_analysis_stats']}")
+
 #need to add printing here
 
         elif response.status_code == 400:
             print("BadRequestError")
+
         else:
             print(f"Error: {response.status_code}")
+    
     except requests.exceptions.ConnectionError:
         print("Error, connection could not be established")
+    
     except requests.exceptions.Timeout:
         print("Error: request timed out")
 
