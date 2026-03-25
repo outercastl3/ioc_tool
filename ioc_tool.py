@@ -3,6 +3,7 @@ import requests
 import json
 import os
 import sys
+from datetime import datetime
 
 def argument_parse():
     pars = argparse.ArgumentParser(
@@ -32,11 +33,12 @@ def hash_api(filehash):
     api_key_virus = os.environ.get("VIRUSTOTAL_KEY")
     
     try:
-        response = requests.get(api_url_virus, headers={"x-apikey": api_key_virus, "accept": "application/json"})
+        response = requests.get(api_url_virus, headers={"x-apikey": api_key_virus, "accept": "application/json"}, timeout=10)
         if response.status_code == 200:
             response_data = response.json()["data"]["attributes"]
+            last_date = datetime.utcfromtimestamp(response_data['last_analysis_date']).strftime('%Y-%m-%d %H:%M:%S UTC')
             print(f"File Name: {response_data['meaningful_name']}") # add more data in the future
-            print(f"Analysis Stats from {response_data['last_analysis_date']}: {response_data['last_analysis_stats']}")
+            print(f"Analysis Stats from {last_date}: {response_data['last_analysis_stats']}")
             print(f"File Type: {response_data['type_description']}")
 
         elif response.status_code == 400:
@@ -55,13 +57,12 @@ def domain_api(domain):
     api_url_virus_domain = f"https://www.virustotal.com/api/v3/domains/{domain}"
     api_key_virus = os.environ.get("VIRUSTOTAL_KEY")
     try:
-        response = requests.get(api_url_virus, headers={"x-apikey": api_key_virus, "accept": "application/json"})
+        response = requests.get(api_url_virus_domain, headers={"x-apikey": api_key_virus, "accept": "application/json"}, timeout=10)
         if response.status_code == 200:
             response_data = response.json()["data"]["attributes"]
             print(f"Domain Name: {domain}")
             print(f"Results of last Analysis: {response_data['last_analysis_stats']}")
 
-#need to add printing here
 
         elif response.status_code == 400:
             print("BadRequestError")
@@ -80,7 +81,7 @@ def ip_api(ip_addr):
     api_url = "https://api.abuseipdb.com/api/v2/check"
     api_key = os.environ.get("ABUSEIPDB_KEY")
     try:
-        response = requests.get(api_url, headers={"Key": api_key, "Accept": "application/json"}, params={"ipAddress": ip_addr, "maxAgeInDays":90})
+        response = requests.get(api_url, headers={"Key": api_key, "Accept": "application/json"}, params={"ipAddress": ip_addr, "maxAgeInDays":90}, timeout=10)
         
         if response.status_code == 200:
             response_data = response.json()["data"]
