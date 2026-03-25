@@ -52,7 +52,7 @@ def hash_api(filehash):
         print("Error: request timed out")
 
 def domain_api(domain):
-    api_url_virus_domain = https://www.virustotal.com/api/v3/domains/{domain}
+    api_url_virus_domain = f"https://www.virustotal.com/api/v3/domains/{domain}"
     api_key_virus = os.environ.get("VIRUSTOTAL_KEY")
     try:
         response = requests.get(api_url_virus, headers={"x-apikey": api_key_virus, "accept": "application/json"})
