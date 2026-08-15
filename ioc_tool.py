@@ -3,7 +3,7 @@ import requests
 import json
 import os
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 
 def argument_parse():
     pars = argparse.ArgumentParser(
@@ -36,7 +36,7 @@ def hash_api(filehash):
         response = requests.get(api_url_virus, headers={"x-apikey": api_key_virus, "accept": "application/json"}, timeout=10)
         if response.status_code == 200:
             response_data = response.json()["data"]["attributes"]
-            last_date = datetime.utcfromtimestamp(response_data['last_analysis_date']).strftime('%Y-%m-%d %H:%M:%S UTC')
+            last_date = datetime.fromtimestamp(response_data['last_analysis_date'], tz=timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')
             print(f"File Name: {response_data['meaningful_name']}") # add more data in the future
             print(f"Analysis Stats from {last_date}: {response_data['last_analysis_stats']}")
             print(f"File Type: {response_data['type_description']}")
